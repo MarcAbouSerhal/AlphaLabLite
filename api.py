@@ -5,9 +5,12 @@ from utils import *
 
 app = FastAPI()
 
+# Run the following command in order to start the API: uvicorn api:app --host 127.0.0.1 --port 8000
+
 class ExecuteRequest(BaseModel):
     script: str
 
+# Same logic as cli.py
 
 @app.post("/execute")
 def execute_endpoint(request: ExecuteRequest):

@@ -3,6 +3,9 @@ from services import *
 from utils import *
 
 def print_help_message():
+    """
+    Prints help message
+    """
     print("usage: cli.py [-h] {execute,view} ...")
     print()
     print("CLI tool")
@@ -16,6 +19,9 @@ def print_help_message():
     print(" -h, --help   show this help message and exit")
 
 if __name__ == "__main__":
+    """
+    Reads arguments and calls the appropriate service
+    """
     args = sys.argv[1:]
     num_args = len(args)
 

@@ -4,7 +4,9 @@ import os
 DB_FILE = "db.json"
 
 def load_db():
-    # Load existing DB or start empty
+    """
+    Returns content of db.json
+    """
     if os.path.exists(DB_FILE):
         with open(DB_FILE, "r") as f:
             return json.load(f)
@@ -12,6 +14,9 @@ def load_db():
         return {}
     
 def upload(id, context):
+    """
+    Adds `id` -> `context` item to `db.json`
+    """
     db = load_db()
 
     db[id] = context
@@ -21,6 +26,9 @@ def upload(id, context):
         json.dump(db, f, indent=2)
 
 def fetch(id):
+    """
+    Returns series context for `id`
+    """
     db = load_db()
 
     return db[id]
