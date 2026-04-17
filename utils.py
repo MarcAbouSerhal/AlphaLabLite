@@ -31,9 +31,12 @@ def extract_components(s):
         `list[str]`: right-hand side args (timeseries)
     """
     series_name, call = s.split("=")
-    transformation_name, args1, args2 = re.findall(r'[^{}]+', call)
-    configurations = args1.split(",")
-    timeseries = args2.split(",")
+    transformation_name, args1, args2 = re.match(
+        r'^([^{}]*)\{([^{}]*)\}\{([^{}]*)\}$',
+        call
+    ).groups()
+    configurations = [] if args1 == "" else args1.split(",")
+    timeseries = [] if args2 == "" else args2.split(",")
     return series_name, transformation_name, configurations, timeseries
 
 # Every transformation name corresponds to a function, input configuration types and number of input series
@@ -44,7 +47,7 @@ TRANSFORMATION_MAP = {
     "RateOfChange": (rate_of_change, (int, ), 1),
     "CrossAbove": (cross_above, (), 2),
     "ConstantSeries": (constant_series, (float, ), 1),
-    "PortfolioEstimation": (portfolio_estimation, (float, ), 3), 
+    "PortfolioSimulation": (portfolio_simulation, (float, ), 3), 
 }
 
 def call_transformation(context, transformation_name, configurations, timeseries):

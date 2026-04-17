@@ -3,12 +3,12 @@ from services import *
 from utils import *
 
 def print_help_message():
-    print("usage: cli.py [-h] \{execute,view\} ...")
+    print("usage: cli.py [-h] {execute,view} ...")
     print()
     print("CLI tool")
     print()
     print("positional arguments:")
-    print(" \{execute,view\}")
+    print(" {execute,view}")
     print("  execute     Read entire stdin as input script")
     print("  view        View times by ID")
     print()
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     if num_args == 0:
         print_help_message()
     elif num_args == 1:
-        arg = args[1]
+        arg = args[0]
         if arg in ("-h", "--help"):
             print_help_message()
         elif arg == "execute":
@@ -39,7 +39,7 @@ if __name__ == "__main__":
         id = args[2]
         series_names = args[3:]
         # Fetch and display items
-        series = view(id)
+        series = view(id, series_names)
         for series_name, series_value in series.items():
             print(series_name, ":")
             print("   ", series_value)

@@ -1,11 +1,12 @@
 import pandas as pd
 
-DATA = pd.read_csv("fetch_transformation_data.csv") # data is read once in case multiple rows are read
 NAN = float('nan')
 
 def fetch(datasource):
-    row = DATA.loc[DATA["datasource"] == datasource].iloc[0]
-    return row.astype(float).tolist()
+    df = pd.read_csv("fetch_transformation_data.csv", header = None)
+    match = df[df.iloc[:, 0] == datasource]
+
+    return match.iloc[0, 1:].astype(float).tolist()
 
 def simple_moving_average(window, a):
     n = len(a)
@@ -21,7 +22,7 @@ def simple_moving_average(window, a):
             b[t] = sum / window
 
     return b
-        
+
 def exponential_moving_average(alpha, a):
     n = len(a)
 
@@ -47,25 +48,24 @@ def rate_of_change(period, a):
 def cross_above(a1, a2):
     n = len(a1)
 
-    b = [NAN] + [int(a1[t - 1] < a2[t - 1] and a1[t] > a2[t]) for t in range(1, n)]
-
-    return b
+    return [0] + [int(a1[t - 1] < a2[t - 1] and a1[t] > a2[t]) for t in range(1, n)]
 
 def constant_series(k, a):
     n = len(a)
 
     return [k for t in range(n)]
 
-def portfolio_estimation(balance, price, entry, exit):
+def portfolio_simulation(balance, entry, exit, price):
     n = len(price)
 
     positions_held = 0
     portfolio = [NAN for t in range(n)]
 
     for i in range(n):
-        if exit[i] == 1:
+        if exit[i] == 1.0:
             balance += positions_held * price[i]
-        elif entry[i] == 1:
+            positions_held = 0
+        elif entry[i] == 1.0:
             positions_held += 1
             balance -= price[i]
         portfolio[i] = balance + positions_held * price[i]
